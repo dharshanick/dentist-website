@@ -12,8 +12,13 @@ app.use(cors());
 app.use(express.json()); // Replaced bodyParser.json() with express.json()
 
 // --- MONGODB CONNECTION ---
-// Replace this string if you have a cloud database, otherwise keep localhost
-mongoose.connect('mongodb://127.0.0.1:27017/smartdent')
+// Use the secret cloud link OR fallback to localhost
+const dbLink = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/smartdent';
+
+mongoose.connect(dbLink, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.log("❌ MongoDB Error:", err));
 
