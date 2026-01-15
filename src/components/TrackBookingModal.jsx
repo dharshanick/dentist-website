@@ -17,7 +17,7 @@ const TrackBookingModal = ({ isOpen, onClose }) => {
         setBookings(null);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/appointments/search/${phone}`);
+            const res = await fetch(`https://dentist-website-qrk4.onrender.com/api/appointments/search/${phone}`);
             const data = await res.json();
 
             if (data.length === 0) {

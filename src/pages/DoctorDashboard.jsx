@@ -27,7 +27,7 @@ const DoctorDashboard = () => {
 
     const fetchAppointments = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/appointments');
+            const res = await fetch('https://dentist-website-qrk4.onrender.com/api/appointments');
             const data = await res.json();
             setAppointments(data);
             setLoading(false);
@@ -40,7 +40,7 @@ const DoctorDashboard = () => {
     // --- 2. ACTIONS ---
     const updateStatus = async (id, newStatus) => {
         try {
-            await fetch(`http://localhost:5000/api/appointments/${id}`, {
+            await fetch(`https://dentist-website-qrk4.onrender.com/api/appointments/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
@@ -57,7 +57,7 @@ const DoctorDashboard = () => {
     const deleteAppointment = async (id) => {
         if (!window.confirm("Are you sure you want to delete this permanently?")) return;
         try {
-            await fetch(`http://localhost:5000/api/appointments/${id}`, { method: 'DELETE' });
+            await fetch(`https://dentist-website-qrk4.onrender.com/api/appointments/${id}`, { method: 'DELETE' });
             setAppointments(appointments.filter(appt => appt._id !== id));
         } catch (error) {
             alert("Failed to delete");

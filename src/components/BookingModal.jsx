@@ -45,7 +45,7 @@ const BookingModal = ({ isOpen, onClose }) => {
     // --- 1. FETCH & PROCESS BOOKINGS ---
     useEffect(() => {
         if (isOpen) {
-            fetch('http://localhost:5000/api/appointments')
+            fetch('https://dentist-website-qrk4.onrender.com/api/appointments')
                 .then(res => res.json())
                 .then(data => {
                     // Filter active bookings and convert them to math ranges
@@ -143,7 +143,7 @@ const BookingModal = ({ isOpen, onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/appointments', {
+            const response = await fetch('https://dentist-website-qrk4.onrender.com/api/appointments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
