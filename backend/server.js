@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 // const bodyParser = require('body-parser'); // Removed to avoid missing dependency
 const nodemailer = require('nodemailer');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config(); // Keeping this just in case, though user code didn't have it explicitly, it's good practice.
 
 const app = express();
@@ -134,6 +135,43 @@ app.delete('/api/appointments/:id', async (req, res) => {
         res.json({ message: "Archived (Soft Deleted)" });
     } catch (error) {
         res.status(500).json({ error: "Delete failed" });
+    }
+});
+
+// 🤖 DR. AI CHATBOT ROUTE
+app.post("/api/chat", async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        // 1. Connect to Gemini
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+        // 2. Define the "Personality"
+        const chat = model.startChat({
+            history: [
+                {
+                    role: "user",
+                    parts: [{ text: "You are Dr. AI, the virtual assistant for SmartDent Clinic. Your job is to answer patient questions about teeth, appointments, and dental care politely. Keep answers short (under 50 words). If someone asks non-dental questions, say 'I can only help with dental queries.'" }],
+                },
+                {
+                    role: "model",
+                    parts: [{ text: "Understood. I am Dr. AI, ready to assist your patients." }],
+                },
+            ],
+        });
+
+        // 3. Send the message and get response
+        const result = await chat.sendMessage(message);
+        const response = await result.response;
+        const text = response.text();
+
+        // 4. Send back to Frontend
+        res.json({ reply: text });
+
+    } catch (error) {
+        console.error("AI Error:", error);
+        res.status(500).json({ error: "Dr. AI is currently offline." });
     }
 });
 
